@@ -1,14 +1,10 @@
 # Define the datasets
 datasets = [
-    "pbc2",
-    "support2",
-    "framingham",
-    "breast_cancer_metabric",
-    "breast_cancer_metabric_relapse",
+    "mma"
 ]
 
 # Define the methods
-methods = ["coxnet", "nsgp"]
+methods = ["survivaltree"]
 
 # Number of repetitions
 repetitions = 50

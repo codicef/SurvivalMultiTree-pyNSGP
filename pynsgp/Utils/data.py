@@ -102,6 +102,9 @@ def load_dataset(
         X, y = _load_nwtco(csv_dir)
     elif dataset_name == "pbc":
         X, y = _load_pbc(csv_dir)
+    elif dataset_name == "mma":
+        X, y = _load_mma(csv_dir)
+
     elif dataset_name == "retinopathy":
         X, y = _load_retinopathy(csv_dir)
     elif dataset_name == "breast_cancer_metabric":
@@ -741,6 +744,22 @@ def _load_pbc2(csv_dir: str) -> Tuple[pd.DataFrame, np.ndarray]:
 
     # keep as features only columns in categorical and numerical columns
     X = X[categorical_columns + numerical_columns]
+
+    return X, y
+
+def _load_mma(csv_dir: str) -> Tuple[pd.DataFrame, np.ndarray]:
+    X = pd.read_csv(f"{csv_dir}/mma.csv", index_col=0).reset_index(drop=True)
+
+    # Assumendo: 'event' è 0/1 (censura/evento), 'time' è continuo
+    bool_event = X["status"].astype(bool)
+    time = X["time"].astype(float)
+
+    y = np.array(
+        [(event, t) for event, t in zip(bool_event, time)],
+        dtype=[("status", bool), ("time", float)],
+    )
+
+    X = X.drop(columns=["status", "time"])
 
     return X, y
 
